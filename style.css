@@ -1,0 +1,680 @@
+/* Base variables for light mode */
+:root {
+    --bg: #f9f9f9;
+    --header-bg: #e6f7ff;
+    --text-color: #333;
+    --primary-blue: #007bff;
+    --secondary-blue: #5ba3d3;
+    --purple: #9b59b6;
+    --red: #e74c3c;
+    --button-hover: #0056b3;
+    --box-shadow: rgba(0, 0, 0, 0.1);
+    --toggle-bg: #ccc;
+    --toggle-circle: #fff;
+    --button-border-radius: 8px;
+    --text-shadow-color: rgba(0, 0, 0, 0.1);
+    --sun-moon-color: #f39c12; /* Color for sun icon */   
+    --glow-color-light: rgba(0, 123, 255, 0.15); /* Light blue glow */
+    --char-color-light: #666; /* Default char color in light mode */
+}
+
+/* Dark mode variables - these override base variables */
+body.dark-mode {
+    --bg: #1a1a2e;
+    --header-bg: #16213e;
+    --text-color: #f0f0f0;
+    --primary-blue: #6c7bff;
+    --secondary-blue: #3f51b5;
+    --purple: #bb86fc;
+    --red: #cf6679;
+    --button-hover: #8c9eff;
+    --box-shadow: rgba(255, 255, 255, 0.1);
+    --toggle-bg: #555;
+    --toggle-circle: #eee;
+    --text-shadow-color: rgba(255, 255, 255, 0.1);
+    --sun-moon-color: #f1c40f; /* Brighter color for moon/sun in dark mode */           
+    --glow-color-dark: rgba(108, 123, 255, 0.1); /* Lighter blue glow */
+    --char-color-dark: #bbb; /* Default char color in dark mode */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cairo', 'Noto Sans Arabic', sans-serif;
+    direction: rtl;
+    background-color: var(--bg); /* Use dynamic variable */
+    color: var(--text-color); /* Use dynamic variable */
+    transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden;
+    position: relative; /* Needed for absolute positioning of background effects */
+    min-height: 100vh; /* Ensure body takes full height for background effects */
+}
+
+.background-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0; /* Ensures it stays behind content */
+    pointer-events: none; /* Allows clicks to pass through */
+}
+
+        /* Fading glows */
+        .glow {
+            position: absolute;
+            background: radial-gradient(circle, var(--glow-color-light) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            animation: glow-fade 10s infinite ease-in-out;
+            will-change: transform, opacity; /* Optimize animation */
+        }
+
+        body.dark-mode .glow {
+            background: radial-gradient(circle, var(--glow-color-dark) 0%, transparent 70%);
+        }
+
+        /* Individual glow animations (example) */
+        .glow:nth-child(1) {
+            width: 300px; height: 300px;
+            top: 10%; left: 5%;
+            animation-delay: 0s;
+            animation-duration: 12s;
+        }
+        .glow:nth-child(2) {
+            width: 250px; height: 250px;
+            bottom: 20%; right: 15%;
+            animation-delay: 4s;
+            animation-duration: 10s;
+        }
+        .glow:nth-child(3) {
+            width: 400px; height: 400px;
+            top: 50%; left: 30%;
+            animation-delay: 8s;
+            animation-duration: 14s;
+        }
+        .glow:nth-child(4) {
+            width: 200px; height: 200px;
+            top: 25%; right: 5%;
+            animation-delay: 2s;
+            animation-duration: 9s;
+        }
+        .glow:nth-child(5) {
+            width: 350px; height: 350px;
+            bottom: 5%; left: 20%;
+            animation-delay: 6s;
+            animation-duration: 11s;
+        }
+
+        @keyframes glow-fade {
+            0% { opacity: 0; transform: scale(0.8) translateY(0px); }
+            50% { opacity: 0.2; transform: scale(1.2) translateY(-20px); }
+            100% { opacity: 0; transform: scale(0.8) translateY(0px); }
+        }
+
+        /* Falling Characters */
+        .falling-char {
+            position: absolute;
+            font-size: 1.5em; /* Initial size, can vary */
+            font-weight: bold;
+            opacity: 0;
+            animation: fall 10s linear forwards; /* 'forwards' keeps last state */
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(0,0,0,0.2);
+            will-change: transform, opacity;
+            color: var(--char-color-light); /* Default color, JS will set random colors */
+        }
+
+        body.dark-mode .falling-char {
+            color: var(--char-color-dark);
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) translateX(0) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 20px)) translateX(var(--fall-x-offset, 0px)) scale(1.2); /* Use custom property for X offset */
+                opacity: 0;
+            }
+        }
+
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative; /* To keep content above background effects */
+            z-index: 1;
+        }
+
+        header {
+            background-color: var(--header-bg); /* Use dynamic variable */
+            padding: 15px 0;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 2px 10px var(--box-shadow); /* Use dynamic variable */
+            position: relative; /* To keep header above background effects */
+            z-index: 2;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--text-color); /* Use dynamic variable */
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-left: 10px;
+        }
+
+        /* Container for desktop nav buttons AND desktop dark mode toggle AND hamburger */
+        .desktop-nav-elements {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Spacing between desktop buttons, toggle, and hamburger (if visible) */
+        }
+
+        .nav-buttons { /* Only the login/new account buttons (desktop) */
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--button-border-radius);
+            font-size: 1em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue); /* Use dynamic variable */
+            color: white;
+            padding: 10px 25px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--button-hover); /* Use dynamic variable */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--box-shadow); /* Use dynamic variable */
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-blue); /* Use dynamic variable */
+            color: white;
+            padding: 10px 25px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--button-hover); /* Use dynamic variable */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--box-shadow); /* Use dynamic variable */
+        }
+
+        /* Dark Mode Toggle - New styles for sun/moon */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 34px;
+            position: relative;
+            width: 60px;
+            background-color: var(--toggle-bg); /* Use dynamic variable */
+            border-radius: 17px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            overflow: hidden;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: var(--toggle-bg); /* Use dynamic variable */
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            cursor: pointer;
+            position: absolute;
+            transition: .4s;
+            border-radius: 17px;
+        }
+
+        .slider:before {
+            background-color: var(--toggle-circle); /* Use dynamic variable */
+            bottom: 4px;
+            content: "";
+            height: 26px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 26px;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-blue); /* Use dynamic variable */
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Sun/Moon icons for toggle */
+        .theme-switch .icon {
+            position: absolute;
+            font-size: 18px;
+            color: var(--sun-moon-color); /* Use dynamic variable */
+            transition: opacity 0.3s, transform 0.3s;
+            line-height: 1;
+        }
+
+        .theme-switch .sun-icon {
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .theme-switch input:checked ~ .sun-icon {
+            opacity: 0;
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .theme-switch .moon-icon {
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .theme-switch input:checked ~ .moon-icon {
+            opacity: 1;
+            transform: translateY(-50%) rotate(0deg);
+        }
+
+        /* Hamburger Menu */
+        .hamburger-menu {
+            display: none; /* Hidden by default for desktop */
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .hamburger-menu span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--text-color); /* Use dynamic variable */
+            border-radius: 2px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .hamburger-menu.active span:nth-child(1) {
+            transform: translateY(11px) rotate(45deg);
+        }
+
+        .hamburger-menu.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-menu.active span:nth-child(3) {
+            transform: translateY(-11px) rotate(-45deg);
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: var(--header-bg); /* Use dynamic variable */
+            box-shadow: -2px 0 10px var(--box-shadow); /* Use dynamic variable */
+            padding-top: 70px;
+            transition: right 0.3s ease-in-out;
+            z-index: 99;
+        }
+
+        .mobile-nav.active {
+            right: 0;
+            display: block;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-nav ul li {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .mobile-nav ul li a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: var(--text-color); /* Use dynamic variable */
+            font-size: 1.1em;
+            transition: background-color 0.2s;
+        }
+
+        .mobile-nav ul li a:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-nav ul li .theme-switch-mobile {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+         .mobile-nav ul li .theme-switch-mobile .sun-icon,
+         .mobile-nav ul li .theme-switch-mobile .moon-icon {
+            font-size: 16px;
+         }
+
+
+        /* Main Content */
+        .hero-section {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 0;
+            position: relative; /* Important for z-index with background effects */
+            min-height: calc(100vh - 100px);
+            overflow: hidden;
+            z-index: 1; /* Ensure content is above background */
+        }
+
+        .text-content {
+            flex: 1;
+            padding: 0 40px;
+            text-align: right;
+            z-index: 2; /* Keep text above everything but header */
+        }
+
+        .text-content h1 {
+            font-size: 4.5em;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            color: var(--text-color); /* Use dynamic variable */
+            font-weight: 900;
+            text-shadow: 2px 2px 5px var(--text-shadow-color); /* Use dynamic variable */
+        }
+
+        .text-content .highlight-purple {
+            color: var(--purple); /* Use dynamic variable */
+        }
+
+        .text-content .highlight-red {
+    background-image: linear-gradient(to right, #833AB4, #35c156, #ccfd1d, #FCCC63);
+    -webkit-background-clip: text; /* خاصية لمُتصفحات الويب كيت زي كروم وسفاري */
+    -webkit-text-fill-color: transparent; /* خاصية لمُتصفحات الويب كيت لإخفاء لون النص الأصلي */
+    /* background-clip: text; */ /* ممكن تضيفها لمتصفحات تانية لكن لسه مش مدعومة بنفس القوة */
+    /* color: transparent; */ /* بديل لـ -webkit-text-fill-color لمتصفحات تانية */
+}
+
+        .text-content p {
+            font-size: 1.4em;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            color: var(--text-color); /* Use dynamic variable */
+        }
+
+        .join-button {
+            background-color: #5ba3d3;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: 700;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .join-button:hover {
+            background-color: #4a82b0;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .join-button img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .image-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative; /* Important for z-index and shapes */
+            padding-left: 40px;
+            z-index: 1; /* Ensure image content is above general background effects */
+        }
+
+        .teacher-image-wrapper {
+            position: relative;
+            width: 550px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 3; /* Keep teacher image and shapes clearly above other elements */
+        }
+
+        .teacher-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        /* Abstract Shapes around teacher image */
+        .shape {
+            position: absolute;
+            opacity: 0.7;
+            background-color: var(--purple); /* Use dynamic variable */
+            animation: float 6s ease-in-out infinite alternate;
+            z-index: 2; /* Shapes should be below teacher image but above background effects */
+        }
+
+        /* Defined 12 shapes with varied sizes, positions, and animation delays */
+        .shape.s1 { width: 80px; height: 80px; top: 10%; left: 5%; background-color: var(--red); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; animation: float 7s ease-in-out infinite alternate; animation-delay: 0s;}
+        .shape.s2 { width: 110px; height: 110px; bottom: 5%; right: 5%; background-color: var(--secondary-blue); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; animation: float 8s ease-in-out infinite alternate; animation-delay: 2s;}
+        .shape.s3 { width: 60px; height: 60px; top: 45%; right: 15%; background-color: var(--purple); border-radius: 50% 50% 50% 50% / 60% 40% 60% 40%; animation: float 6s ease-in-out infinite alternate; animation-delay: 4s;}
+        .shape.s4 { width: 70px; height: 70px; top: 20%; right: 8%; background-color: rgba(255, 165, 0, 0.7); border-radius: 40% 60% 60% 40% / 50% 50% 50% 50%; animation: float 9s ease-in-out infinite alternate; animation-delay: 1s;}
+        .shape.s5 { width: 90px; height: 90px; bottom: 15%; left: 10%; background-color: rgba(0, 128, 0, 0.7); border-radius: 70% 30% 70% 30% / 30% 60% 40% 70%; animation: float 7.5s ease-in-out infinite alternate; animation-delay: 3s;}
+        .shape.s6 { width: 50px; height: 50px; top: 60%; left: 20%; background-color: rgba(255, 192, 203, 0.7); border-radius: 50%; animation: float 6.5s ease-in-out infinite alternate; animation-delay: 5s;}
+        .shape.s7 { width: 75px; height: 75px; top: 5%; right: 25%; background-color: rgba(128, 0, 128, 0.7); border-radius: 40% 60% 70% 30% / 70% 30% 40% 60%; animation: float 8s ease-in-out infinite alternate; animation-delay: 0.5s;}
+        .shape.s8 { width: 100px; height: 100px; bottom: 10%; left: 25%; background-color: rgba(0, 255, 255, 0.7); border-radius: 80% 20% 80% 20% / 20% 80% 20% 80%; animation: float 9.5s ease-in-out infinite alternate; animation-delay: 2.5s;}
+        .shape.s9 { width: 65px; height: 65px; top: 30%; left: 15%; background-color: rgba(255, 255, 0, 0.7); border-radius: 50% 50% 50% 50% / 50% 60% 40% 50%; animation: float 7s ease-in-out infinite alternate; animation-delay: 4.5s;}
+        .shape.s10 { width: 85px; height: 85px; top: 70%; right: 20%; background-color: rgba(165, 42, 42, 0.7); border-radius: 30% 70% 40% 60% / 60% 40% 70% 30%; animation: float 8.5s ease-in-out infinite alternate; animation-delay: 1.5s;}
+        .shape.s11 { width: 55px; height: 55px; bottom: 20%; right: 30%; background-color: rgba(128, 128, 128, 0.7); border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%; animation: float 6s ease-in-out infinite alternate; animation-delay: 3.5s;}
+        .shape.s12 { width: 95px; height: 95px; top: 25%; left: 30%; background-color: rgba(70, 130, 180, 0.7); border-radius: 60% 40% 60% 40% / 40% 60% 40% 60%; animation: float 7.2s ease-in-out infinite alternate; animation-delay: 5.5s;}
+
+
+        /* Keyframe Animations */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg) scale(1); }
+            50% { transform: translateY(-15px) rotate(5deg) scale(1.05); }
+            100% { transform: translateY(0px) rotate(0deg) scale(1); }
+        }
+
+        @keyframes dna-rotate {
+            0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0.2;}
+            25% { transform: translateX(20px) translateY(50px) rotate(90deg); opacity: 0.1;}
+            50% { transform: translateX(0px) translateY(100px) rotate(180deg); opacity: 0.2;}
+            75% { transform: translateX(-20px) translateY(50px) rotate(270deg); opacity: 0.1;}
+            100% { transform: translateX(0) translateY(0) rotate(360deg); opacity: 0.2;}
+        }
+
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 992px) {
+            .hero-section {
+                flex-direction: column-reverse;
+                padding-top: 30px;
+            }
+
+            .text-content {
+                text-align: center;
+                padding: 0 20px;
+                margin-top: 30px;
+            }
+
+            .text-content h1 {
+                font-size: 3.5em;
+            }
+
+            .text-content p {
+                font-size: 1.2em;
+            }
+
+            .image-content {
+                padding-left: 0;
+            }
+
+            .teacher-image-wrapper {
+                width: 400px;
+                height: 450px;
+            }
+
+            .nav-buttons {
+                display: none; /* Hide desktop nav buttons */
+            }
+
+            .desktop-nav-elements { /* This wrapper now contains only the dark mode toggle and hamburger on mobile */
+                gap: 15px; /* Space between toggle and hamburger */
+            }
+
+            .hamburger-menu {
+                display: flex; /* Show hamburger menu */
+            }
+            
+            .header-content {
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 1.5em;
+            }
+
+            .text-content h1 {
+                font-size: 2.8em;
+            }
+
+            .text-content p {
+                font-size: 1.1em;
+            }
+
+            .join-button {
+                padding: 12px 30px;
+                font-size: 1.1em;
+            }
+
+            .teacher-image-wrapper {
+                width: 320px;
+                height: 360px;
+            }
+            /* Adjust shapes for smaller screens */
+            .shape.s1 { width: 60px; height: 60px; top: 8%; left: 3%; }
+            .shape.s2 { width: 90px; height: 90px; bottom: 3%; right: 3%; }
+            .shape.s3 { width: 50px; height: 50px; top: 48%; right: 10%; }
+            .shape.s4 { width: 60px; height: 60px; top: 15%; right: 5%; }
+            .shape.s5 { width: 75px; height: 75px; bottom: 10%; left: 5%; }
+            .shape.s6 { width: 40px; height: 40px; top: 65%; left: 15%; }
+            .shape.s7 { width: 65px; height: 65px; top: 5%; right: 20%; }
+            .shape.s8 { width: 80px; height: 80px; bottom: 8%; left: 20%; }
+            .shape.s9 { width: 55px; height: 55px; top: 35%; left: 10%; }
+            .shape.s10 { width: 75px; height: 75px; top: 70%; right: 15%; }
+            .shape.s11 { width: 45px; height: 45px; bottom: 15%; right: 25%; }
+            .shape.s12 { width: 85px; height: 85px; top: 20%; left: 25%; }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                flex-wrap: nowrap;
+                justify-content: space-between;
+            }
+            /* Reduce gap slightly for very small screens */
+            .desktop-nav-elements {
+                 gap: 10px;
+            }
+            .logo {
+                margin-bottom: 0;
+            }
+            .theme-switch-wrapper {
+                margin-bottom: 0;
+            }
+            .text-content h1 {
+                font-size: 2.2em;
+            }
+            .text-content p {
+                font-size: 0.9em;
+            }
+            .join-button {
+                width: 100%;
+                justify-content: center;
+                margin-top: 20px;
+            }
+            .teacher-image-wrapper {
+                width: 280px;
+                height: 320px;
+            }
+        }
+
+     .how-we-simplified {
+    padding: 40px 20px;
+    text-align: center;
+}
+
